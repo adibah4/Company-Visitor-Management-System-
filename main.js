@@ -6,34 +6,33 @@ const Security    = require("./security");
 MongoClient.connect(
 	// TODO: Connection 
 	"mongodb+srv://m001-student:m001-mongodb-basics@sandbox.o5rxm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    { useNewUrlParser: true},
+    	{ useNewUrlParser: true},
 	).catch(err => {
 	    console.error(err.stack)
 	    process.exit(1)
-    }).then(async client => {
+    	}).then(async client => {
 	    console.log('Connected to MongoDB');
 	    User.injectDB(client);
 	    Visitor.injectDB(client);
-		Security.injectDB(client);
-    })
+	    Security.injectDB(client);
+    	})
 
-    const express      = require('express');
-	const { userInfo } = require ("os");
-    const app          = express()
-    const port         = process.env.PORT || 3000
-
-    const swaggerUi    = require('swagger-ui-express');
-    const swaggerJsdoc = require('swagger-jsdoc');
-    const options = {
-	    definition: {
-		    openapi: '3.0.0',
+    	const express      = require('express');
+    	const { userInfo } = require ("os");
+    	const app          = express()
+	const port         = process.env.PORT || 3000
+ 	const swaggerUi    = require('swagger-ui-express');
+	const swaggerJsdoc = require('swagger-jsdoc');
+	const options = {
+		definition: {
+		openapi: '3.0.0',
 		    info: {
 			    title: 'MyVMS API',
 			    version: '1.0.0',
-		    },
-	},
-	apis: ['./main.js'], 
-};
+			  },
+		},
+		apis: ['./main.js'], 
+	};
 
 const swaggerSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -51,15 +50,15 @@ app.post('/login/user', async (req, res) => {
 	}
 	else{
 		return res.status(200).json({
-			username			: user.username,
+			username		: user.username,
 			"Staff ID"  		: user.id,
 			"Staff Name"		: user.name,
-       		"Staff Ic Number"  	: user.ic,
+       		        "Staff Ic Number"  	: user.ic,
 			"Staff Contact"		: user.contact,
 
 			role	: user.role,
 			token	: generateAccessToken({
-				role: user.role
+			    role: user.role
 			}),
 		});
 	}
@@ -124,7 +123,7 @@ app.post('/login/user', async (req, res) => {
 
 //REGISTER STAFF
 app.post('/register/user', async (req, res) => {
-    const reg = await Staff.register(req.body.username, req.body.password, req.body.id, req.body.name, req.body.ic, req.body.contact, req.body.role)
+    const reg = await User.register(req.body.username, req.body.password, req.body.id, req.body.name, req.body.ic, req.body.contact, req.body.role)
     if(req.user.role == "security"){
       if (reg == "username already existed"){
         return res.status(404).send("The username already existed")
@@ -200,7 +199,7 @@ app.post('/register/user', async (req, res) => {
 
 //DELETE STAFF
 app.delete('/delete/user', async (req, res) => {
-	const dels = await Staff.delete(req.body.username)
+	const dels = await User.delete(req.body.username)
 	if(req.user.role == "security"){
 		if (dels == "staff is not exist"){
 		return res.status(404).send("Staff is not exist")
@@ -264,7 +263,6 @@ app.post('/login/security', async (req, res) => {
     }
     else{
         return res.status(200).json({
-			//"Security Username" 	: sec.usernameSecurity,
 			"Security ID"       	: sec.idSecurity,
 		  	"Security Name"     	: sec.nameSecurity,
 		  	"Security Ic Number"	: sec.icNumber,
@@ -272,7 +270,7 @@ app.post('/login/security', async (req, res) => {
 
           	role	: sec.role,
           	token	: generateAccessToken({
-            	role: sec.role
+            	    role: sec.role
           	}),
         });
     }
@@ -340,7 +338,7 @@ app.post('/register/visitor', async (req, res) => {
     const regvstr = await Visitor.VisitorRegister(req.body.idClient, req.body.nameClient, req.body.age, req.body.gender, req.body.contactClient, req.body.company, req.body.idApp, req.body.date, req.body.time, req.body.purpose)
     if(req.user.role == "user"){
     	if (regvstr == "client id existed"){
-        	return res.status(200).send("client id existed")
+        	return res.status(404).send("client id existed")
     	}
     	else{
     		return res.status(200).send("New client registered")}
