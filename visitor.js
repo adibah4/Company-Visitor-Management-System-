@@ -20,17 +20,17 @@ class Visitor {
 		   		}
 		   		else{
 					await visitor.insertOne({
-                    "Client ID"				: idClient,
-                    "Client Name"      		: nameClient,
-                    "Client Age"			: age,
-                    "Client Gender"			: gender,
-                    "Client Contact"		: contactClient,
-                    "Client Company" 		: company, 
+                    				"Client ID"			: idClient,
+                    				"Client Name"      		: nameClient,
+                    				"Client Age"			: age,
+                    				"Client Gender"			: gender,
+                    				"Client Contact"		: contactClient,
+                    				"Client Company" 		: company, 
                       
-                    "Appointment ID"		: idApp,
-                    "Appointment Date"		: date,
-                    "Appointment Time"		: time,
-                    "Appointment Purpose"	: purpose,
+                    				"Appointment ID"		: idApp,
+                    				"Appointment Date"		: date,
+                    				"Appointment Time"		: time,
+                    				"Appointment Purpose"		: purpose,
 					});
 
 					return "new client registered"
@@ -42,8 +42,8 @@ class Visitor {
     static async viewvisitor(nameClient){
         const exist = await visitor.findOne({"Client Name" : nameClient})
             if(exist){
-                const user = await visitor.findOne(
-                {"Client Name" : nameClient
+                const user = await visitor.findOne({
+			"Client Name" : nameClient
                 })
                 return exist
             }
@@ -60,10 +60,10 @@ class Visitor {
 		    }).then(async user =>{
 		    //console.log(user)
 		    if (user){
-		        return visitor.updateOne({ 
+		        return visitor.updateMany({ 
 			    'Client Name' : nameClient},
-		    	{"$set" : {"Appointment Date" : "22/08/2022"}
-		    })
+		    		{"$set" : {"Appointment Date" : "22/08/2022"}
+            })
 		    }
 		    else {
 			    return "Client is not exist"
@@ -79,10 +79,9 @@ class Visitor {
 		    //console.log(user)
 
 		    if (user){
-		        return visitor.updateOne({ 
-			    'Client Name' : nameClient},
-			
-                {"$set" : {"Appointment Time" : "15:00"}}
+		        return visitor.updateMany({ 
+			    	'Client Name' : nameClient},{
+				"$set" : {"Appointment Time" : "15:00"}}
                 )
 		    }
 		    
@@ -100,12 +99,10 @@ class Visitor {
 		    //console.log(user)
 
 		    if (user){
-		        return visitor.updateOne({ 
+		        return visitor.updateMany({ 
 			    "Client Name" : nameClient},
-			    {"$set" : {"Appointment Purpose" : "Discussion"}
-		        }).then(result => {
-			    //console.log(result)
-		        })
+			    {"$set" : {"Appointment Purpose" : "Discussion"}}
+                )
 		    }
 		    
             else {
